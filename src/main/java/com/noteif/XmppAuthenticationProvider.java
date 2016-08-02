@@ -5,13 +5,7 @@ package com.noteif;
  */
 
 import config.XmppConfig;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import rocks.xmpp.addr.Jid;
 import rocks.xmpp.core.XmppException;
@@ -20,7 +14,7 @@ import rocks.xmpp.core.session.XmppClient;
 import rocks.xmpp.extensions.httpbind.BoshConnectionConfiguration;
 
 @Component
-public class XmppAuthenticationProvider implements AuthenticationProvider {
+public class XmppAuthenticationProvider {
 
     @Autowired
     private XmppConfig xmppConfig;
@@ -37,11 +31,9 @@ public class XmppAuthenticationProvider implements AuthenticationProvider {
                 .hostname(xmppConfig.getHost())
                 .port(xmppConfig.getPort())
                 .path(xmppConfig.getHttpBind())
-                //.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("hostname", 3128)))
                 .wait(60)
                 .build();
 
-        //XmppClient xmppClient = XmppClient.create(xmppConfig.getHost(), tcpConfiguration, boshConfiguration);
         XmppClient xmppClient = XmppClient.create(xmppConfig.getHost(), tcpConfiguration, boshConfiguration);
         try {
             System.out.println("Connecting to Host " + xmppConfig.getHost() + ":" + xmppConfig.getPort());
@@ -55,6 +47,7 @@ public class XmppAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
+    /*
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         //Authentication and BOSH pre-binding
@@ -95,8 +88,7 @@ public class XmppAuthenticationProvider implements AuthenticationProvider {
             Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
             return new UsernamePasswordAuthenticationToken(xmppUser, authentication.getCredentials(), authorities);
-           */
-            return new UsernamePasswordAuthenticationToken(null, null);
+
         } catch (XmppException e) {
             e.printStackTrace();
             return null;
@@ -108,5 +100,5 @@ public class XmppAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
-
+*/
 }

@@ -60,7 +60,6 @@
 			<artifactId>xmpp-extensions-client</artifactId>
 			<version>0.7.0</version>
 		</dependency>
-		<
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
