@@ -98,7 +98,6 @@
     <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.21" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-aop:1.4.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.3.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.8.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-core:4.3.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:4.3.2.RELEASE" level="project" />
@@ -157,6 +156,17 @@
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-websocket:1.4.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-messaging:4.3.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-websocket:4.3.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:1.4.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.3.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:4.1.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:4.1.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:4.1.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-core-client:0.7.0" level="project" />
+    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-core:0.7.0" level="project" />
+    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-addr:0.7.0" level="project" />
+    <orderEntry type="library" name="Maven: rocks.xmpp:precis:0.1.0" level="project" />
+    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-extensions-client:0.7.0" level="project" />
+    <orderEntry type="library" name="Maven: rocks.xmpp:xmpp-extensions:0.7.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.postgresql:postgresql:9.4.1209.jre7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:1.4.0.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:1.4.0.RELEASE" level="project" />
