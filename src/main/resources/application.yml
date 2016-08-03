@@ -47,6 +47,8 @@ logging:
     org.springframework.security: DEBUG
 
 xmpp:
-  host: ec2-52-11-149-14.us-west-2.compute.amazonaws.com
+  host: ec2-52-43-70-97.us-west-2.compute.amazonaws.com
   port: 7070
   httpBind: /http-bind/
+  authKey: dN50a11zOyNsqyy9
+  apiPort: 9090

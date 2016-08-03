@@ -20,4 +20,8 @@ public class XmppUser extends AbstractEntity {
         this.username = username;
         this.password = RandomPasswordGeneratorService.generatePassword();
     }
+
+    public String getPassword() {
+        return password != null ? password : (password = RandomPasswordGeneratorService.generatePassword());
+    }
 }

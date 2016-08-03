@@ -12,6 +12,8 @@ public class XmppConfig {
     private int port;
     private String httpBind;
     private String prebindUrl;
+    private String authKey;
+    private int apiPort;
 
     public String getHost() {
         return host;
@@ -44,4 +46,21 @@ public class XmppConfig {
     public void setPrebindUrl(String prebindUrl) {
         this.prebindUrl = prebindUrl;
     }
+
+    public String getAuthKey() {
+        return authKey;
+    }
+
+    public void setAuthKey(String authKey) {
+        this.authKey = authKey;
+    }
+
+    public int getApiPort() {
+        return apiPort;
+    }
+
+    public void setApiPort(int apiPort) {
+        this.apiPort = apiPort;
+    }
+
 }
