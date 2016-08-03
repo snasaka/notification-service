@@ -1,0 +1,63 @@
+<div ng-controller="com.noteif.userProfile.controller">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>My Applications</h2>
+        </div>
+        <div class="panel-body container-fluid">
+            <div>
+                <div class="col-md-4 list-group">
+                    <a ng-click="applicationSelected({isNew:true})"
+                       ng-style="{'background-color': selectedApplication.isNew ? '#eee' : ''}"
+                       type="button"
+                       class="list-group-item">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                        Register New Application
+                    </a>
+                    <a ng-repeat="application in userProfile.applications"
+                       ng-click="applicationSelected(application)"
+                       ng-style="{'background-color': selectedApplication.id === application.id ? '#eee' : ''}"
+                       type="button"
+                       class="list-group-item">
+                        {{application.name}}
+                    </a>
+                </div>
+                <div class="col-md-8" ng-if="selectedApplication">
+                    <div  ng-if="selectedApplication.isNew">
+                        <div>
+                            <h3>Application Name: </h3>
+                            <input ng-model="selectedApplication.name"
+                                   type="text"
+                                   placeholder="Application Name"
+                                   class="form-control"/>
+                        </div>
+                        <hr>
+                        <div class="pull-right">
+                            <button ng-click="registerApplication()"
+                                    class="btn btn-primary"style="width:175px;">Register Application</button>
+                            <button ng-click="applicationSelected({isNew:true})"
+                                    class="btn btn-default"
+                                    style="margin-left:10px; width:175px;">Cancel</button>
+                        </div>
+                    </div>
+                    <div  ng-if="!selectedApplication.isNew">
+                        <h3>Application Name: </h3><h4>{{selectedApplication.name}}</h4>
+                        <h3>Application Id: </h3><h4>{{selectedApplication.id}}</h4>
+                        <h3>Registered Users: </h3>
+                        <h4 ng-repeat="user in selectedApplication.xmppUsers">{{user.username}}</h4>
+                        <h3>Register New User</h3>
+                        <div class="input-group">
+                            <input ng-model="newUser.username"
+                                   type="text"
+                                   placeholder="Username"
+                                   class="form-control"/>
+                            <span class="input-group-btn">
+                                <button ng-click="registerUser()"
+                                    class="btn btn-primary">Register User</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -42,7 +42,7 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableOAuth2Client
 @EnableAuthorizationServer
 @Order(6)
-public class NotificationServiceApplication extends WebSecurityConfigurerAdapter implements CommandLineRunner {
+public class NotificationServiceApplication extends WebSecurityConfigurerAdapter {//} implements CommandLineRunner {
 	@Autowired
 	private XmppServiceImpl xmppAuthenticationProvider;
 
@@ -50,10 +50,10 @@ public class NotificationServiceApplication extends WebSecurityConfigurerAdapter
 		SpringApplication.run(NotificationServiceApplication.class, args);
 	}
 
-	@Override
+/*	@Override
 	public void run(String... strings) throws Exception {
 		xmppAuthenticationProvider.sendMessage();
-	}
+	}*/
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
