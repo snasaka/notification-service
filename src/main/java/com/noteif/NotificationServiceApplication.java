@@ -43,8 +43,9 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableAuthorizationServer
 @Order(6)
 public class NotificationServiceApplication extends WebSecurityConfigurerAdapter implements CommandLineRunner {
+
 	@Autowired
-	private XmppServiceImpl xmppAuthenticationProvider;
+	private XmppServiceImpl xmppServiceImpl;
 
 	public static void main(String[] args) {
 		SpringApplication.run(NotificationServiceApplication.class, args);
@@ -52,7 +53,7 @@ public class NotificationServiceApplication extends WebSecurityConfigurerAdapter
 
 	@Override
 	public void run(String... strings) throws Exception {
-		xmppAuthenticationProvider.sendMessage();
+		xmppServiceImpl.sendMessage("admin", "Hi, this is a test Message");
 	}
 
 	@Autowired
