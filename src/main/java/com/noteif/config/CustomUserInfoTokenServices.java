@@ -1,5 +1,6 @@
 package com.noteif.config;
 
+import java.util.List;
 import java.util.Map;
 
 import com.noteif.domain.User;
@@ -28,6 +29,25 @@ public class CustomUserInfoTokenServices extends UserInfoTokenServices {
         }
         if( map.containsKey("last_name")) {
             user.setLastName((String) map.get("last_name"));
+        }
+
+        if( map.containsKey("name")) {
+            if(map.get("name") instanceof String) {
+                String[] fullName = ((String) map.get("name")).split(" ");
+                user.setFirstName(fullName[0]);
+                user.setLastName(fullName[1]);
+            }
+        }
+
+        if( map.containsKey("displayName")) {
+            String[] fullName = ((String) map.get("displayName")).split(" ");
+            user.setFirstName(fullName[0]);
+            user.setLastName(fullName[1]);
+        }
+
+        if( map.containsKey("emails")) {
+            List<Map<String, String>> emails = (List<Map<String,String>>) map.get("emails");
+            user.setEmail(emails.get(0).get("value"));
         }
 
         return user;
