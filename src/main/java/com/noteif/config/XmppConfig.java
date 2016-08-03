@@ -1,10 +1,12 @@
-package config;
+package com.noteif.config;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "xmpp", locations = "classpath:application.properties")
+@Data
+@ConfigurationProperties(prefix = "xmpp", locations = "classpath:application.yml")
 public class XmppConfig {
     private String host;
     private int port;

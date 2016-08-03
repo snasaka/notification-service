@@ -1,6 +1,7 @@
 package com.noteif;
 
-import config.XmppConfig;
+import com.noteif.config.XmppConfig;
+import com.noteif.service.XmppServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import javax.servlet.Filter;
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.noteif.config.CustomUserInfoTokenServices;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,7 +17,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceS
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -45,7 +44,7 @@ import org.springframework.web.filter.CompositeFilter;
 @Order(6)
 public class NotificationServiceApplication extends WebSecurityConfigurerAdapter implements CommandLineRunner {
 	@Autowired
-	private XmppAuthenticationProvider xmppAuthenticationProvider;
+	private XmppServiceImpl xmppAuthenticationProvider;
 
 	public static void main(String[] args) {
 		SpringApplication.run(NotificationServiceApplication.class, args);
@@ -53,7 +52,7 @@ public class NotificationServiceApplication extends WebSecurityConfigurerAdapter
 
 	@Override
 	public void run(String... strings) throws Exception {
-		xmppAuthenticationProvider.connectToServer();
+		xmppAuthenticationProvider.sendMessage();
 	}
 
 	@Autowired

@@ -15,7 +15,7 @@ public class CustomUserInfoTokenServices extends UserInfoTokenServices {
         User user = new User();
 
         if (map.containsKey("id")) {
-            user.setExternalProviderId((String) map.get("id"));
+            user.setExternalProviderId(extractId(map, "id"));
         }
         if (map.containsKey("username")) {
             user.setUsername((String) map.get("username"));
@@ -31,5 +31,10 @@ public class CustomUserInfoTokenServices extends UserInfoTokenServices {
         }
 
         return user;
+    }
+
+    // Hack for github auth
+    private String extractId(Map<String, Object> map, String id) {
+        return map.get(id) instanceof Integer ? String.valueOf((Integer) map.get(id)) : (String) map.get(id);
     }
 }
