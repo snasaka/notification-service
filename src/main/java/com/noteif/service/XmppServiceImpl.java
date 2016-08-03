@@ -32,11 +32,17 @@ public class XmppServiceImpl implements XmppService {
 
     private XmppClient xmppClient;
 
-    @Autowired
-    private XmppConfig xmppConfig;
+    RestTemplate restTemplate = new RestTemplate();
+
+    private String BASE_CLIENT_URL = "";
+
+    private String authKey = "";
 
     @Autowired
     public XmppServiceImpl(XmppConfig xmppConfig) {
+        BASE_CLIENT_URL = "http://" + xmppConfig.getHost() + ":" + xmppConfig.getApiPort() + "/plugins/restapi/v1/";
+        authKey = xmppConfig.getAuthKey();
+
         TcpConnectionConfiguration tcpConfiguration = TcpConnectionConfiguration.builder()
                 .hostname(xmppConfig.getHost())
                 .port(5222)
@@ -95,14 +101,17 @@ public class XmppServiceImpl implements XmppService {
         return Jid.of(retrieveJID(username));
     }
 
-    private String retrieveJID(String username) {
+    private HttpEntity<String> buildEntity() {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", xmppConfig.getAuthKey());
+        httpHeaders.set("Authorization", authKey);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SessionEntities> sessions = restTemplate.exchange("http://" + xmppConfig.getHost() + ":" + xmppConfig.getApiPort() + "/plugins/restapi/v1/sessions/admin",
-                HttpMethod.GET, httpEntity, SessionEntities.class);
+        return new HttpEntity<>(httpHeaders);
+    }
+
+    private String retrieveJID(String username) {
+
+        ResponseEntity<SessionEntities> sessions = restTemplate.exchange(BASE_CLIENT_URL + "sessions/admin",
+                HttpMethod.GET, buildEntity(), SessionEntities.class);
 
 
         List<SessionEntity> sessionEntities = sessions.getBody().getSessions();
