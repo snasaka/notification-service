@@ -59,24 +59,26 @@ public class XmppServiceImpl implements XmppService {
     public void sendMessage(String username, String message) {
         List<String> userSessions = retrieveJID(username);
 
-        for(String str : userSessions) {
-            xmppClient.send(new Message(Jid.of(str), Message.Type.CHAT, message));
+        if (!CollectionUtils.isEmpty(userSessions)) {
+            for (String str : userSessions) {
+                xmppClient.send(new Message(Jid.of(str), Message.Type.CHAT, message));
+            }
+
+            /* Listeners */
+            xmppClient.addOutboundMessageListener(s -> {
+                Message sentMessage = s.getMessage();
+                System.out.println("Message Sent : " + sentMessage);
+            });
+
+            xmppClient.addInboundMessageListener(e -> {
+                Message receivedMessage = e.getMessage();
+                System.out.println("Message Received : " + receivedMessage);
+            });
+
+            xmppClient.getManager(RosterManager.class).addRosterListener(e -> {
+                System.out.println("roster changes : " + e);
+            });
         }
-
-        /* Listeners */
-        xmppClient.addOutboundMessageListener(s -> {
-            Message sentMessage = s.getMessage();
-            System.out.println("Message Sent : "+ sentMessage);
-        });
-
-        xmppClient.addInboundMessageListener(e -> {
-            Message receivedMessage = e.getMessage();
-            System.out.println("Message Received : "+ receivedMessage);
-        });
-
-        xmppClient.getManager(RosterManager.class).addRosterListener(e -> {
-            System.out.println("roster changes : "+e);
-        });
     }
 
     @Override
@@ -88,8 +90,10 @@ public class XmppServiceImpl implements XmppService {
          */
         List<String> usernames = findUsersByApplicationID(applicationId);
 
-        for(String username: usernames) {
-            sendMessage(username, message);
+        if (!CollectionUtils.isEmpty(usernames)) {
+            for (String username : usernames) {
+                sendMessage(username, message);
+            }
         }
     }
 
