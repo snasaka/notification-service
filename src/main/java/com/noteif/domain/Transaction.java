@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Transaction extends AbstractEntity {
 
     private UUID applicationId;
-    private UUID xmppUserId;
+    private String username;
     private String jid;
     private String messgeSubject;
     private String messageBody;
