@@ -9,12 +9,16 @@
     <base href="/" />
     <link rel="stylesheet" type="text/css"
           href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css"
+          href="/webjars/font-awesome/css/font-awesome.min.css" />
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/underscorejs/underscore-min.js"></script>
     <script type="text/javascript"
             src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webjars/angular/angular.min.js"></script>
     <script type="text/javascript" src="/webjars/angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="js/applicationInfo/applicationInfo.js"></script>
+    <script type="text/javascript" src="js/applicationsList/applicationsList.js"></script>
     <script type="text/javascript" src="js/userProfile/userProfile.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 </head>
@@ -22,7 +26,7 @@
 <h1>Login</h1>
 <div class="container" ng-show="!authenticated">
     <div>
-        With Facebook: <a href="/login/facebook">click here</a>
+        With Facebook: <a href="/login/facebook">click here</a> <i class="icon-facebook-sign"></i>
     </div>
     <div>
         With Github: <a href="/login/github">click here</a>

@@ -1,4 +1,4 @@
-angular.module('com.noteif.userProfile', [])
+angular.module('com.noteif.userProfile', ['com.noteif.applicationsList', 'com.noteif.applicationInfo'])
     .controller('com.noteif.userProfile.controller', [
         '$scope',
         '$routeParams',
@@ -9,32 +9,20 @@ angular.module('com.noteif.userProfile', [])
         '$q',
         userProfileRepository]);
 
-function userProfileCtrl($scope, $routeParams, userProfileRepository) {
-    $scope.selectedApplication = {isNew:true};
-    $scope.newUser = {};
+function userProfileCtrl($scope, $routeParams,userProfileRepository) {
+    $scope.infoOrDashboard = 'info';
 
-    $scope.applicationSelected = function(application) {
-        $scope.selectedApplication = application;
-    };
+    $scope.$on('applicationSelected', function(message, args) {
+        $scope.selectedApplication = args.application;
+    });
 
-    $scope.registerApplication = function() {
-        $scope.userProfile.applications.push($scope.selectedApplication);
-        userProfileRepository.saveUserProfile($routeParams.providerId, $scope.userProfile).then(function successCallback(data) {
-            $scope.userProfile = data;
-            $scope.selectedApplication = _.findWhere($scope.userProfile.applications, {name: $scope.selectedApplication.name});
-            console.log($scope.userProfile);
-        });
-    };
+    $scope.$on('registerUser', function(message, args) {
+        registerUser(args.user);
+    });
 
-    $scope.registerUser = function() {
-        if($scope.newUser.username) {
-            $scope.selectedApplication.xmppUsers.push($scope.newUser);
-            userProfileRepository.saveApplication($scope.selectedApplication).then(function successCallback(data) {
-                $scope.selectedApplication = data;
-                $scope.newUser = {};
-            });
-        }
-    };
+    $scope.$on('registerApplication', function(message, args) {
+        registerApplication();
+    });
 
     getUserProfile();
 
@@ -44,6 +32,26 @@ function userProfileCtrl($scope, $routeParams, userProfileRepository) {
                 $scope.userProfile = data;
                 console.log($scope.userProfile);
             }
+        });
+    }
+
+    function registerUser(newUser) {
+        if(newUser.username) {
+            $scope.selectedApplication.xmppUsers.push(newUser);
+            userProfileRepository.saveApplication($scope.selectedApplication).then(function successCallback(data) {
+                $scope.selectedApplication = data;
+            });
+        }
+    }
+
+    function registerApplication() {
+        $scope.userProfile.applications.push($scope.selectedApplication);
+        userProfileRepository.saveUserProfile($routeParams.providerId, $scope.userProfile).then(function successCallback(data) {
+            $scope.userProfile = data;
+            $scope.selectedApplication = _.findWhere($scope.userProfile.applications, {name: $scope.selectedApplication.name});
+            $scope.$broadcast('applicationRegistered', {
+                application: $scope.selectedApplication
+            });
         });
     }
 }
