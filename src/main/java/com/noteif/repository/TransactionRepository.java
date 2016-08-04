@@ -12,6 +12,4 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
     Collection<Transaction> findByApplicationIdAndDateCreatedAfter(UUID applicationId, Date date);
-
-    Collection<Transaction> findByXmppUserId(UUID xmppUserId);
 }
