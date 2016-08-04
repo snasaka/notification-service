@@ -3,20 +3,14 @@ angular.module('noteifApp', ['ngRoute', 'com.noteif.userProfile'])
    .config(function($routeProvider, $httpProvider){
     console.log("How about here");
     $routeProvider
-/*        .when('/_=_', {
-            templateUrl: 'js/login/login.html',
-            controller: 'com.noteif.login.controller'
-        });*/
         .when('/user/:providerId', {
             templateUrl: 'js/userProfile/userProfile.html',
             controller: 'com.noteif.userProfile.controller'
         });
-        /*.otherwise({redirectTo: '/'});*/
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 });
 
 function controller($http, $location, $scope) {
-    console.log("Just checkint");
     $http.get("/user").success(function(data) {
         if (data.name) {
             $scope.user = data;
