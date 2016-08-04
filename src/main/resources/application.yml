@@ -52,3 +52,5 @@ xmpp:
   httpBind: /http-bind/
   authKey: dN50a11zOyNsqyy9
   apiPort: 9090
+
+server.port: 80
