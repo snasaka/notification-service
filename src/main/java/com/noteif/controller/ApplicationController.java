@@ -52,6 +52,8 @@ public class ApplicationController {
         } catch(NoSuchElementException e) {
             xmppUser = new XmppUser(username);
             xmppService.createUsers(ImmutableList.of(xmppUser), applicationId);
+            application.getXmppUsers().add(xmppUser);
+            applicationRespository.save(application);
         }
         userMap.put("username", applicationId.toString() + "-" + xmppUser.getUsername());
         userMap.put("password", xmppUser.getPassword());
