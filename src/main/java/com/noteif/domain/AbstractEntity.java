@@ -28,7 +28,7 @@ public abstract class AbstractEntity implements Serializable {
 
 	@Column(name="date_created")
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date dateCreated;
+	protected Date dateCreated = new Date();
 
 	@Column(name="updated_by", length=50)
 	protected String updatedBy;
