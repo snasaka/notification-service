@@ -1,0 +1,34 @@
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>My Applications</h2>
+        </div>
+        <div class="panel-body container-fluid">
+            <div>
+                <div class="col-md-4">
+                    <applications-list applications="userProfile.applications"></applications-list>
+                </div>
+                <div class="col-md-8" ng-if="selectedApplication">
+                    <div class="" style="width:100%">
+                        <div class="btn-group col-md-offset-2" style="width:inherit">
+                            <button ng-click="infoOrDashboard = 'info'"
+                                    ng-style="{'background-color': infoOrDashboard === 'info' ? 'rgb(238, 238, 238)' : ''}"
+                                    type="button"
+                                    class="btn btn-default col-md-4">Application Info</button>
+                            <button ng-click="infoOrDashboard = 'dashboard'"
+                                    ng-style="{'background-color': infoOrDashboard === 'dashboard' ? 'rgb(238, 238, 238)' : ''}"
+                                    type="button"
+                                    class="btn btn-default col-md-4">Notifications Dashboard</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div ng-if="infoOrDashboard=='info'">
+                        <application-info application="selectedApplication"></application-info>
+                    </div>
+                    <div ng-if="infoOrDashboard=='dashboard'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

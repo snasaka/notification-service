@@ -1,12 +1,26 @@
 package com.noteif.service;
 
-/**
- * Created by nasakas on 8/2/2016.
- */
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.noteif.config.XmppConfig;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.UUID;
+
+import com.noteif.domain.XmppUser;
+import com.sun.xml.internal.stream.writers.XMLWriter;
 import org.igniterealtime.restclient.entity.SessionEntities;
 import org.igniterealtime.restclient.entity.SessionEntity;
 import org.igniterealtime.restclient.entity.UserEntities;
@@ -15,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -99,9 +114,26 @@ public class XmppServiceImpl implements XmppService {
 
     @Override
     public void sendMessageToUsers(List<String> usernames, String message) {
-        for(String username: usernames) {
+        for (String username : usernames) {
             sendMessage(username, message);
         }
+    }
+
+    @Override
+    public void createUsers(List<XmppUser> xmppUsers, UUID applicationId) {
+        xmppUsers.forEach(xmppUser -> {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setUsername(applicationId.toString() + "-" + xmppUser.getUsername());
+            userEntity.setPassword(xmppUser.getPassword());
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Authorization", authKey);
+            httpHeaders.set("Content-Type", "application/xml");
+            HttpEntity<UserEntity> httpEntity = new HttpEntity<>(userEntity, httpHeaders);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<HttpStatus> responseEntity = restTemplate.exchange(BASE_CLIENT_URL + "users",
+                    HttpMethod.POST, httpEntity, HttpStatus.class);
+        });
     }
 
     private HttpEntity<String> buildEntity() {

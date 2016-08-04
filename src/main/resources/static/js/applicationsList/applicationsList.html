@@ -1,0 +1,16 @@
+<div class="list-group">
+    <a ng-click="applicationSelected({isNew:true})"
+       ng-style="{'background-color': selectedApplication.isNew ? '#eee' : ''}"
+       type="button"
+       class="list-group-item">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+        Register New Application
+    </a>
+    <a ng-repeat="application in applications"
+       ng-click="applicationSelected(application)"
+       ng-style="{'background-color': selectedApplication.id === application.id ? '#eee' : ''}"
+       type="button"
+       class="list-group-item">
+        {{application.name}}
+    </a>
+</div>

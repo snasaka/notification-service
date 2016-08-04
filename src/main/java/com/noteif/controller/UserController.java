@@ -33,6 +33,9 @@ public class UserController {
             userRepository.save(user);
             userProfileRepository.save(new UserProfile(user, ImmutableList.of(new Application("test app", ImmutableList.of(new XmppUser("test_xmpp_user", "password"))))));
         }
+        map.put("username", user.getUsername());
+        map.put("id", user.getId().toString());
+        map.put("providerId", user.getExternalProviderId());
         return map;
     }
 }
