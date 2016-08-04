@@ -8,6 +8,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -26,4 +27,8 @@ public class Application extends  AbstractEntity {
             joinColumns = { @JoinColumn(name = "application_id") },
             inverseJoinColumns = { @JoinColumn(name = "xmpp_user_id") })
     private List<XmppUser> xmppUsers;
+
+    public List<XmppUser> getXmppUsers() {
+        return xmppUsers != null ? xmppUsers : new ArrayList<>();
+    }
 }

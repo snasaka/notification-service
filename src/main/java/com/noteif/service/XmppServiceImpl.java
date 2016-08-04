@@ -1,18 +1,17 @@
 package com.noteif.service;
 
-/**
- * Created by nasakas on 8/2/2016.
- */
 
 import com.noteif.config.XmppConfig;
+import com.noteif.domain.XmppUser;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.igniterealtime.restclient.entity.SessionEntities;
 import org.igniterealtime.restclient.entity.SessionEntity;
+import org.igniterealtime.restclient.entity.UserEntities;
+import org.igniterealtime.restclient.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -57,27 +56,69 @@ public class XmppServiceImpl implements XmppService {
     }
 
     @Override
-    public void sendMessage(String user, String message) {
-        xmppClient.send(new Message(toUserJID(user), Message.Type.CHAT, message));
+    public void sendMessage(String username, String message) {
+        List<String> userSessions = retrieveJID(username);
 
-        /* Listeners */
-        xmppClient.addOutboundMessageListener(s -> {
-            Message sentMessage = s.getMessage();
-            System.out.println("Message Sent : "+ sentMessage);
-        });
+        if (!CollectionUtils.isEmpty(userSessions)) {
+            for (String str : userSessions) {
+                xmppClient.send(new Message(Jid.of(str), Message.Type.CHAT, message));
+            }
 
-        xmppClient.addInboundMessageListener(e -> {
-            Message receivedMessage = e.getMessage();
-            System.out.println("Message Received : "+ receivedMessage);
-        });
+            /* Listeners */
+            xmppClient.addOutboundMessageListener(s -> {
+                Message sentMessage = s.getMessage();
+                System.out.println("Message Sent : " + sentMessage);
+            });
 
-        xmppClient.getManager(RosterManager.class).addRosterListener(e -> {
-            System.out.println("roster changes : "+e);
-        });
+            xmppClient.addInboundMessageListener(e -> {
+                Message receivedMessage = e.getMessage();
+                System.out.println("Message Received : " + receivedMessage);
+            });
+
+            xmppClient.getManager(RosterManager.class).addRosterListener(e -> {
+                System.out.println("roster changes : " + e);
+            });
+        }
     }
 
-    private Jid toUserJID(String username) {
-        return Jid.of(retrieveJID(username));
+    @Override
+    public void sendMessageToMyGroup(String applicationId, String message) {
+        /*
+            1. Find Usernames of all users of the application By applicationId.
+            2. Loop over each user and get all sessions associated to this user
+               and send message to all those sessions.
+         */
+        List<String> usernames = findUsersByApplicationID(applicationId);
+
+        if (!CollectionUtils.isEmpty(usernames)) {
+            for (String username : usernames) {
+                sendMessage(username, message);
+            }
+        }
+    }
+
+    @Override
+    public void sendMessageToUsers(List<String> usernames, String message) {
+        for (String username : usernames) {
+            sendMessage(username, message);
+        }
+    }
+
+    @Override
+    public void createUsers(List<XmppUser> xmppUsers, UUID applicationId) {
+        xmppUsers.forEach(xmppUser -> {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setUsername(applicationId.toString() + "-" + xmppUser.getUsername());
+            userEntity.setPassword(xmppUser.getPassword());
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Authorization", authKey);
+            httpHeaders.set("Content-Type", "application/xml");
+            HttpEntity<UserEntity> httpEntity = new HttpEntity<>(userEntity, httpHeaders);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<HttpStatus> responseEntity = restTemplate.exchange(BASE_CLIENT_URL + "users",
+                    HttpMethod.POST, httpEntity, HttpStatus.class);
+        });
     }
 
     private HttpEntity<String> buildEntity() {
@@ -87,9 +128,9 @@ public class XmppServiceImpl implements XmppService {
         return new HttpEntity<>(httpHeaders);
     }
 
-    private String retrieveJID(String username) {
+    private List<String> retrieveJID(String username) {
 
-        ResponseEntity<SessionEntities> sessions = restTemplate.exchange(BASE_CLIENT_URL + "sessions/admin",
+        ResponseEntity<SessionEntities> sessions = restTemplate.exchange(BASE_CLIENT_URL + "sessions/" + username,
                 HttpMethod.GET, buildEntity(), SessionEntities.class);
 
 
@@ -99,6 +140,20 @@ public class XmppServiceImpl implements XmppService {
             return null;
         }
 
-        return sessions.getBody().getSessions().get(0).getSessionId();
+        return sessionEntities.stream().map(sessionEntity -> sessionEntity.getSessionId()).collect(Collectors.toList());
+
+    }
+
+    private List<String> findUsersByApplicationID(String applicationId) {
+        ResponseEntity<UserEntities> responseEntity = restTemplate.exchange(BASE_CLIENT_URL + "users?search=" + applicationId,
+                HttpMethod.GET, buildEntity(), UserEntities.class);
+
+        List<UserEntity> userEntities =  responseEntity.getBody().getUsers();
+
+        if(CollectionUtils.isEmpty(userEntities)) {
+            return null;
+        }
+
+        return userEntities.stream().map(userEntity -> userEntity.getUsername()).collect(Collectors.toList());
     }
 }
