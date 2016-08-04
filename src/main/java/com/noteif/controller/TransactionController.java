@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class TransactionController {
     public Map<String, Long> getCountByApplication(@PathVariable UUID applicationId,
                                         @RequestParam int timeline) {
 
-        Map<String, Long> dataPoints = new HashMap();
+        Map<String, Long> dataPoints = new TreeMap();
 
         Map<String, Long> countByDate = transactionRepository.findByApplicationIdAndDateCreatedAfter(applicationId, DateUtils.addMinutes(new Date(),-timeline))
                 .stream()

@@ -25,7 +25,7 @@ function applicationDashboardCtrl($scope, applicationDashboardRepository) {
     $scope.loadChart = function(selectedTimeline) {
         applicationDashboardRepository.getApplicationDataPoints($scope.application.id, selectedTimeline).then(function (data) {
             $scope.labels = _.map(_.keys(data), function (num) {
-                return _.indexOf(_.keys(data), num) % 5 == 0 ? num : "";
+                return _.indexOf(_.keys(data), num) % 4 == 0 ? num : "";
             });
             $scope.data = [_.values(data)];
         });
