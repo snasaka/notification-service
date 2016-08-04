@@ -11,17 +11,17 @@ public class SendMessageController {
     @Autowired
     private XmppService xmppService;
 
-    @PostMapping(value = "notif/send")
+    @PostMapping(value = "api/send")
     public void sendMessage(@RequestParam("username") String username, @RequestBody String message) {
         xmppService.sendMessage(username, message);
     }
 
-    @PostMapping(value = "notif/sendMessageToApplication")
+    @PostMapping(value = "api/sendMessageToApplication")
     public void sendMessageToApplication(@RequestParam("applicationId") String applicationId, @RequestBody String message) {
         xmppService.sendMessageToMyGroup(applicationId, message);
     }
 
-    @PostMapping(value= "notif/sendMessageToUsers")
+    @PostMapping(value= "api/sendMessageToUsers")
     public void sendMessageToGivenUsers(@RequestParam("usernames") List<String> usernames, @RequestBody String message) {
         xmppService.sendMessageToUsers(usernames, message);
     }
