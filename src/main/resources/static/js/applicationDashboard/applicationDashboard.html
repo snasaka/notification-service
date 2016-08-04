@@ -1,0 +1,18 @@
+<div  ng-if="application.isNew">
+    Please select an application to view your dashboard
+</div>
+<div  ng-if="!application.isNew">
+    <h3>Application Name: </h3><h4>{{application.name}}</h4>
+    <h3>Application Id: </h3><h4>{{application.id}}</h4>
+
+    <div class="btn-group pull-right" role="group" aria-label="...">
+        <button type="button" class="btn btn-default" ng-click="loadChart(15)">15m</button>
+        <button type="button" class="btn btn-default" ng-click="loadChart(30)">30m</button>
+        <button type="button" class="btn btn-default" ng-click="loadChart(60)">1hr</button>
+    </div>
+    <canvas id="line" class="chart chart-line" chart-data="data"
+            chart-labels="labels" chart-series="series" chart-options="options"
+            chart-dataset-override="datasetOverride" chart-click="onClick">
+    </canvas>
+
+</div>

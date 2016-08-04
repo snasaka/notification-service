@@ -1,4 +1,4 @@
-angular.module('noteifApp', ['ngRoute', 'com.noteif.userProfile'])
+angular.module('noteifApp', ['ngRoute', 'com.noteif.userProfile', 'chart.js'])
    .controller('com.noteif.home.controller', ['$http', '$location', '$scope', controller])
    .config(function($routeProvider, $httpProvider){
     console.log("How about here");

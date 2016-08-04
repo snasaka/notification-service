@@ -1,4 +1,4 @@
-angular.module('com.noteif.userProfile', ['com.noteif.applicationsList', 'com.noteif.applicationInfo'])
+angular.module('com.noteif.userProfile', ['com.noteif.applicationsList', 'com.noteif.applicationInfo', 'com.noteif.applicationDashboard'])
     .controller('com.noteif.userProfile.controller', [
         '$scope',
         '$routeParams',
