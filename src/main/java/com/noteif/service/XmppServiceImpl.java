@@ -1,36 +1,17 @@
 package com.noteif.service;
 
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.noteif.config.XmppConfig;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.UUID;
-
 import com.noteif.domain.XmppUser;
-import com.sun.xml.internal.stream.writers.XMLWriter;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.igniterealtime.restclient.entity.SessionEntities;
 import org.igniterealtime.restclient.entity.SessionEntity;
 import org.igniterealtime.restclient.entity.UserEntities;
 import org.igniterealtime.restclient.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
