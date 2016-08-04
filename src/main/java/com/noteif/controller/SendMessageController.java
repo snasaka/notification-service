@@ -1,11 +1,9 @@
 package com.noteif.controller;
 
 import com.noteif.service.XmppService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SendMessageController {
@@ -13,8 +11,18 @@ public class SendMessageController {
     @Autowired
     private XmppService xmppService;
 
-    @RequestMapping(value = "send")
-    public void sendMessage(@RequestParam("toUser") String username, @RequestBody String message) {
+    @PostMapping(value = "notif/send")
+    public void sendMessage(@RequestParam("username") String username, @RequestBody String message) {
         xmppService.sendMessage(username, message);
+    }
+
+    @PostMapping(value = "notif/sendMessageToApplication")
+    public void sendMessageToApplication(@RequestParam("applicationId") String applicationId, @RequestBody String message) {
+        xmppService.sendMessageToMyGroup(applicationId, message);
+    }
+
+    @PostMapping(value= "notif/sendMessageToUsers")
+    public void sendMessageToGivenUsers(@RequestParam("usernames") List<String> usernames, @RequestBody String message) {
+        xmppService.sendMessageToUsers(usernames, message);
     }
 }

@@ -6,8 +6,11 @@ package com.noteif.service;
 
 import com.noteif.config.XmppConfig;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.igniterealtime.restclient.entity.SessionEntities;
 import org.igniterealtime.restclient.entity.SessionEntity;
+import org.igniterealtime.restclient.entity.UserEntities;
+import org.igniterealtime.restclient.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,8 +60,12 @@ public class XmppServiceImpl implements XmppService {
     }
 
     @Override
-    public void sendMessage(String user, String message) {
-        xmppClient.send(new Message(toUserJID(user), Message.Type.CHAT, message));
+    public void sendMessage(String username, String message) {
+        List<String> userSessions = retrieveJID(username);
+
+        for(String str : userSessions) {
+            xmppClient.send(new Message(Jid.of(str), Message.Type.CHAT, message));
+        }
 
         /* Listeners */
         xmppClient.addOutboundMessageListener(s -> {
@@ -76,8 +83,25 @@ public class XmppServiceImpl implements XmppService {
         });
     }
 
-    private Jid toUserJID(String username) {
-        return Jid.of(retrieveJID(username));
+    @Override
+    public void sendMessageToMyGroup(String applicationId, String message) {
+        /*
+            1. Find Usernames of all users of the application By applicationId.
+            2. Loop over each user and get all sessions associated to this user
+               and send message to all those sessions.
+         */
+        List<String> usernames = findUsersByApplicationID(applicationId);
+
+        for(String username: usernames) {
+            sendMessage(username, message);
+        }
+    }
+
+    @Override
+    public void sendMessageToUsers(List<String> usernames, String message) {
+        for(String username: usernames) {
+            sendMessage(username, message);
+        }
     }
 
     private HttpEntity<String> buildEntity() {
@@ -87,9 +111,9 @@ public class XmppServiceImpl implements XmppService {
         return new HttpEntity<>(httpHeaders);
     }
 
-    private String retrieveJID(String username) {
+    private List<String> retrieveJID(String username) {
 
-        ResponseEntity<SessionEntities> sessions = restTemplate.exchange(BASE_CLIENT_URL + "sessions/admin",
+        ResponseEntity<SessionEntities> sessions = restTemplate.exchange(BASE_CLIENT_URL + "sessions/" + username,
                 HttpMethod.GET, buildEntity(), SessionEntities.class);
 
 
@@ -99,6 +123,20 @@ public class XmppServiceImpl implements XmppService {
             return null;
         }
 
-        return sessions.getBody().getSessions().get(0).getSessionId();
+        return sessionEntities.stream().map(sessionEntity -> sessionEntity.getSessionId()).collect(Collectors.toList());
+
+    }
+
+    private List<String> findUsersByApplicationID(String applicationId) {
+        ResponseEntity<UserEntities> responseEntity = restTemplate.exchange(BASE_CLIENT_URL + "users?search=" + applicationId,
+                HttpMethod.GET, buildEntity(), UserEntities.class);
+
+        List<UserEntity> userEntities =  responseEntity.getBody().getUsers();
+
+        if(CollectionUtils.isEmpty(userEntities)) {
+            return null;
+        }
+
+        return userEntities.stream().map(userEntity -> userEntity.getUsername()).collect(Collectors.toList());
     }
 }
