@@ -42,7 +42,7 @@ import org.springframework.web.filter.CompositeFilter;
 @EnableOAuth2Client
 @EnableAuthorizationServer
 @Order(6)
-public class NotificationServiceApplication extends WebSecurityConfigurerAdapter {//} implements CommandLineRunner {
+public class NotificationServiceApplication extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private XmppServiceImpl xmppServiceImpl;
@@ -51,10 +51,12 @@ public class NotificationServiceApplication extends WebSecurityConfigurerAdapter
 		SpringApplication.run(NotificationServiceApplication.class, args);
 	}
 
-/*	@Override
+	/*
+	@Override
 	public void run(String... strings) throws Exception {
 		xmppServiceImpl.sendMessage("admin", "Hi, this is a test Message");
-	}*/
+	}
+    */
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
@@ -62,10 +64,10 @@ public class NotificationServiceApplication extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-		http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**","/users/applications/**").permitAll().anyRequest()
+		http.antMatcher("/**").authorizeRequests().antMatchers("/", "/api/**", "/login**", "/webjars/**","/users/applications/**").permitAll().anyRequest()
 				.authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-				.logoutSuccessUrl("/").permitAll().and().csrf()
+				.logoutSuccessUrl("/").permitAll().and().csrf().ignoringAntMatchers("/api/**")
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 		// @formatter:on
