@@ -11,4 +11,6 @@ public interface XmppService {
     void createUsers(List<XmppUser> xmppUser, UUID applicationId);
     void sendMessageToMyGroup(UUID applicationId, String message);
     void sendMessageToUsers(UUID applicationId, List<String> users, String message);
+
+    void createXmppUser(UUID applicationId, XmppUser xmppUser);
 }

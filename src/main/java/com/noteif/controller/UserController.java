@@ -29,9 +29,12 @@ public class UserController {
         Map<String, String> map = new LinkedHashMap<>();
         User user = (User) auth.getPrincipal();
         map.put("name", user.getFirstName()+" "+user.getLastName());
-        if(userRepository.findByExternalProviderId(user.getExternalProviderId()) == null) {
+        User existingUser = userRepository.findByExternalProviderId(user.getExternalProviderId());
+        if(existingUser == null) {
             userRepository.save(user);
             userProfileRepository.save(new UserProfile(user, ImmutableList.of(new Application("test app", ImmutableList.of(new XmppUser("test_xmpp_user", "password"))))));
+        } else {
+            user = existingUser;
         }
         map.put("username", user.getUsername());
         map.put("id", user.getId().toString());

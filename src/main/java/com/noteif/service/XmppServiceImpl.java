@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import rocks.xmpp.addr.Jid;
 import rocks.xmpp.core.XmppException;
@@ -119,18 +120,30 @@ public class XmppServiceImpl implements XmppService {
     @Override
     public void createUsers(List<XmppUser> xmppUsers, UUID applicationId) {
         xmppUsers.forEach(xmppUser -> {
-            UserEntity userEntity = new UserEntity();
-            userEntity.setUsername(applicationId.toString() + "-" + xmppUser.getUsername());
-            userEntity.setPassword(xmppUser.getPassword());
-
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("Authorization", authKey);
-            httpHeaders.set("Content-Type", "application/xml");
-            HttpEntity<UserEntity> httpEntity = new HttpEntity<>(userEntity, httpHeaders);
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<HttpStatus> responseEntity = restTemplate.exchange(BASE_CLIENT_URL + "users",
-                    HttpMethod.POST, httpEntity, HttpStatus.class);
+            createXmppUser(applicationId, xmppUser);
         });
+    }
+
+
+    @Override
+    public void createXmppUser(UUID applicationId, XmppUser xmppUser) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(applicationId.toString() + "-" + xmppUser.getUsername());
+        userEntity.setPassword(xmppUser.getPassword());
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", authKey);
+        httpHeaders.set("Content-Type", "application/xml");
+        HttpEntity<UserEntity> httpEntity = new HttpEntity<>(userEntity, httpHeaders);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            restTemplate.exchange(BASE_CLIENT_URL + "users",
+                    HttpMethod.POST, httpEntity, HttpStatus.class);
+        } catch (HttpClientErrorException ex)   {
+            if (ex.getStatusCode().value() != 409) {
+                throw ex;
+            }
+        }
     }
 
     private HttpEntity<String> buildEntity() {
